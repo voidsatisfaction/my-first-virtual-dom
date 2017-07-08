@@ -5,7 +5,7 @@ if (module.hot) {
 }
 
 function h(type, props, ...children) {
-  return { type, props, children };
+  return { type, props: props || {}, children };
 }
 
 function createElement(node) {
@@ -13,6 +13,7 @@ function createElement(node) {
     return document.createTextNode(node);
   }
   const $el = document.createElement(node.type);
+  setProps($el, node.props);
   node.children
     .map(createElement)
     .forEach($el.appendChild.bind($el));
@@ -55,24 +56,49 @@ function updateElement($parent, newNode, oldNode, index=0) {
 
 /* ---------------------- */
 
-const a = (
-  <ul className="list">
-    <li>item 1</li>
-    <li>item 2</li>
-  </ul>
-);
+function isCustomProp(name) {
+  return false;
+}
 
-const b = (
-  <ul>
-    <li>item 1</li>
-    <li>hello!</li>
+function setBooleanProp($target, name, value) {
+  if (value) {
+    $target.setAttribute(name, value);
+    $target[name] = true;
+  } else {
+    $target[name] = false;
+  }
+}
+
+function setProp($target, name, value) {
+  if (isCustomProp(name)) {
+    return;
+  } else if (name === 'className') {
+    $target.setAttribute('class', value);
+  } else if (typeof value === 'boolean') {
+    setBooleanProp($target, name, value);
+  } else {
+    $target.setAttribute(name, value);
+  }
+}
+
+function setProps($target, props) {
+  Object.keys(props).forEach((name) => {
+    setProp($target, name, props[name]);
+  });
+}
+
+/* ---------------------- */
+
+const f = (
+  <ul style="list-style: node;">
+    <li className="item">item 1</li>
+    <li className="item">
+      <input type="checkbox" checked={true} />
+      <input type="text" disabled={false} />
+    </li>
   </ul>
 );
 
 const $root = document.getElementById('root');
-const $reload = document.getElementById('reload');
 
-updateElement($root, a);
-$reload.addEventListener('click', () => {
-  updateElement($root, b, a);
-})
+$root.appendChild(createElement(f));
