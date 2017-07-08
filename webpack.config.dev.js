@@ -12,22 +12,25 @@ module.exports = {
     path: path.join(__dirname, 'dist'),
     filename: 'bundle.js'
   },
+  module: {
+    loaders: [{
+      test: /\.css$/,
+      loaders: ['style-loader', 'css-loader']
+    }, {
+      test: /\.js?$/,
+      loader: 'babel-loader',
+      include: path.join(__dirname, 'src'), /* exclude: /node_modules/ */
+      query: {
+        presets: ['es2015', 'react']
+      }
+    }]
+  },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
       template: './src/index.html'
     })
   ],
-  module: {
-    loaders: [{
-      test: /\.css$/,
-      loaders: ['style-loader', 'css-loader']
-    }, {
-      test: /\.js$/,
-      loaders: ['babel-loader'],
-      include: path.join(__dirname, 'src') /* exclude: /node_modules/ */
-    }]
-  },
   devServer: {
     contentBase: './dist',
     hot: true
