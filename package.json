@@ -1,0 +1,22 @@
+{
+  "name": "virtual_dom",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "./node_modules/webpack/bin/webpack.js --config webpack.config.prod.js",
+    "dev": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --config webpack.config.dev.js"
+  },
+  "devDependencies": {
+    "babel-core": "^6.25.0",
+    "babel-loader": "^7.1.1",
+    "html-webpack-plugin": "2",
+    "webpack": "^3.1.0",
+    "webpack-dev-server": "^2.5.1"
+  },
+  "dependencies": {
+    "css-loader": "^0.28.4",
+    "pleasejs": "^0.4.2",
+    "style-loader": "^0.18.2"
+  }
+}
