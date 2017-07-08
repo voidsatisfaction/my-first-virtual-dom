@@ -8,6 +8,8 @@ function h(type, props, ...children) {
   return { type, props: props || {}, children };
 }
 
+/* ---------- ELEMENT ------------ */
+
 function createElement(node) {
   if (typeof node === 'string') {
     return document.createTextNode(node);
@@ -54,7 +56,7 @@ function updateElement($parent, newNode, oldNode, index=0) {
   }
 }
 
-/* ---------------------- */
+/* ---------- PROPS ------------ */
 
 function isCustomProp(name) {
   return false;
