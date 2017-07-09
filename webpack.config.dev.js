@@ -21,7 +21,7 @@ module.exports = {
       loader: 'babel-loader',
       include: path.join(__dirname, 'src'), /* exclude: /node_modules/ */
       query: {
-        presets: ['es2015', 'react']
+        presets: ['stage-2', 'es2015', 'react']
       }
     }]
   },

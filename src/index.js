@@ -43,6 +43,11 @@ function updateElement($parent, newNode, oldNode, index=0) {
       $parent.childNodes[index]
     );
   } else if (newNode.type) {
+    updateProps(
+      $parent.childNodes[index],
+      newNode.props,
+      oldNode.props
+    );
     const newLength = newNode.children.length;
     const oldLength = oldNode.children.length;
     for (let i = 0; i < newLength || i < oldLength; i++) {
@@ -89,10 +94,41 @@ function setProps($target, props) {
   });
 }
 
+function removeBooleanProp($target, name) {
+  $target.removeAttribute(name);
+  $target[name] = false;
+}
+
+function removeProp($target, name, value) {
+  if (isCustomProp($target)) {
+    return;
+  } else if (name === 'className') {
+    $target.removeAttribute('class');
+  } else if (typeof value === 'boolean') {
+    removeBooleanProp($target, name);
+  } else {
+    $target.removeAttribute(name);
+  }
+}
+
+function updateProp($target, name, newVal, oldVal) {
+  if (!newVal) {
+    removeProp($target, name, oldVal);
+  } else if (!oldVal || newVal !== oldVal) {
+    setProp($target, name, newVal);
+  }
+}
+
+function updateProps($target, newProps, oldProps = {}) {
+  const props = { ...newProps, ...oldProps };
+  Object.keys(props).forEach((name) => {
+    updateProp($target, name, newProps[name], oldProps[name]);
+  });
+}
 /* ---------------------- */
 
 const f = (
-  <ul style="list-style: node;">
+  <ul style="list-style: none;">
     <li className="item">item 1</li>
     <li className="item">
       <input type="checkbox" checked={true} />
@@ -101,6 +137,26 @@ const f = (
   </ul>
 );
 
-const $root = document.getElementById('root');
+const g = (
+  <ul style="list-style: none;">
+    <li className="item item2">item 1</li>
+    <li style="background: red;">
+      <input type="checkbox" checked={false}/>
+      <input type="text" disabled={true}/>
+    </li>
+  </ul>
+)
 
-$root.appendChild(createElement(f));
+const $root = document.getElementById('root');
+const $reload = document.getElementById('reload');
+
+updateElement($root, f);
+$reload.addEventListener('click', () => {
+  if ($reload.className == 'active') {
+    $reload.className = null;
+    updateElement($root, g, f); 
+  } else {
+    $reload.className = 'active';
+    updateElement($root, f, g);
+  }
+})
