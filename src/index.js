@@ -1,3 +1,4 @@
+/* eslint-disable */
 /** @jsx h */
 
 if (module.hot) {
@@ -7,6 +8,8 @@ if (module.hot) {
 function h(type, props, ...children) {
   return { type, props: props || {}, children };
 }
+
+/* eslint-enable */
 
 /* ---------- ELEMENT ------------ */
 
@@ -84,7 +87,7 @@ function addEventListeners($target, props) {
         props[name]
       );
     }
-  })
+  });
 }
 
 function setBooleanProp($target, name, value) {
@@ -149,7 +152,7 @@ function updateProps($target, newProps, oldProps = {}) {
 
 const f = (
   <ul style="list-style: none;">
-    <li className="item" onClick={() => alert('item 1 pressed')}>item 1</li>
+    <li forceUpdate={true} className="item" onClick={() => alert('item 1 pressed')}>item 1</li>
     <li className="item">
       <input type="checkbox" checked={true} />
       <input type="text" disabled={false} />
@@ -160,14 +163,14 @@ const f = (
 
 const g = (
   <ul style="list-style: none;">
-    <li className="item item2" onClick={() => alert('item 2 pressed')}>item 1</li>
+    <li forceUpdate={true} className="item item2" onClick={() => alert('item 2 pressed')}>item 2</li>
     <li style="background: red;">
       <input type="checkbox" checked={false}/>
       <input type="text" disabled={true}/>
     </li>
     <li forceUpdate={true}>text</li>
   </ul>
-)
+);
 
 const $root = document.getElementById('root');
 const $reload = document.getElementById('reload');
@@ -181,4 +184,4 @@ $reload.addEventListener('click', () => {
     $reload.className = 'active';
     updateElement($root, f, g);
   }
-})
+});
